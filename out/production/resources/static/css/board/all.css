@@ -1,0 +1,132 @@
+* {
+    list-style: none;
+    text-decoration: none;
+    color: inherit;
+    box-sizing: border-box;
+    margin: 0 auto;
+    padding: 0;
+    text-align: center;
+    line-height: 50px;
+  }
+
+body {
+  width: 100%;
+  height: 100%;
+  position: relative;
+}
+
+body h3 { 
+  color: rgb(39, 39, 48);
+  font-size: 25px;
+  font-weight: bold;
+}
+
+body button {
+  width: 70px;
+  line-height: 25px;
+  margin-left: 0;
+  margin-right: 20px;
+  background-color: lightgray;
+  border: 0px;
+}
+
+body input[type=button] {
+  width: 70px;
+  line-height: 25px;
+  margin-left: 0;
+  margin-right: 20px;
+  background-color: lightgray;
+  border: 0px;
+}
+
+body form .content {
+  width: 800px;
+  height: 50px;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+}
+
+
+/* 게시글 목록 */
+body #frm {
+  width: 800px;
+  font-size: 17px;
+}
+
+body #frm table {
+  width: 100%;
+  color: rgb(72, 72, 83);
+}
+
+body #frm table td {
+  border-bottom: 1px solid lightgray;
+}
+
+body #frm table thead #selectAll {
+  width: 50px;
+}
+
+body #frm table thead td:last-child {
+  width:120px;
+}
+
+body #frm div:nth-child(3) {
+  width: 800px;
+  height: 50px;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+}
+
+body #frm div:nth-child(3) button {
+  width: 70px;
+  line-height: 25px;
+  margin-left: 0;
+  margin-right: 20px;
+  background-color: lightgray;
+  border: 0px;
+}
+
+body #frm #delModal {
+  display: block;
+  position: absolute;
+  width: 300px;
+  height: 250px;
+}
+
+
+
+/* 게시글 조회 */
+body #frm.detail .content  {
+  font-size: large;
+}
+
+body #frm.detail .content  label {
+  display: inline-block;
+  width: 300px;
+  font-weight: bold;
+}
+
+body #frm.detail .content input {
+  border: 0;
+  width: 500px;
+}
+
+body #frm.detail .content input:focus {
+  outline: none;
+}
+
+body #frm.detail .content textarea {
+  resize: none;
+  width: 800px;
+  height: 500px;
+}
+
+body #frm.detail .content textarea:focus {
+  outline: none;
+}
+
+/* 게시글 수정 */
+
+/*  */

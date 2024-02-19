@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="ko"
+      xmlns:th="http://www.thhymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>게시글 수정</title>
+  <link rel="stylesheet" href="/css/board/all.css">
+</head>
+<body>
+  <h3>게시글 수정</h3>
+  <form action="" method="post" id="frm">
+    <div class="content">
+      <label for="userId">아이디</label>
+      <input id="userId" name="userId" type="text" th:value="${board.userId}">
+    </div>
+    <div class="content">
+      <label for="title">제목</label>
+      <input id="title" name="title" type="text" th:value="${board.title}">
+    </div>
+    <div class="content">
+      <label for="writer">작성자</label>
+      <input id="writer" name="writer" type="text" th:value="${board.writer}" readonly>
+    </div>
+    <div class="content">
+      <label for="material">내용</label>
+      <textarea name="material" id="material" cols="30" rows="10" th:text="${board.material}"></textarea>
+    </div>
+  </form>
+  <div class="btnBox">
+    <input id="deleteBtn" type="button" value="삭제">
+    <input id="updateBtn" type="submit" value="저장">
+    <input id="listBtn" type="button" value="목록" onclick="location.href='/boards'">
+  </div>
+  <script>
+    const uid = document.getElementById('userId').value;
+    const updateBtn = document.getElementById('updateBtn');
+    updateBtn.addEventListener('click', evt => {
+      document.querySelector('form').submit();
+    });
+  </script>
+</body>
+</html>

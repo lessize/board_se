@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="ko"
+      xmlns:th="http://www.thhymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>게시글 작성</title>
+  <link rel="stylesheet" href="/css/board/all.css">
+  <!-- async : html dom 트리 형성 후 수행됨 -->
+  <style>
+    input::placeholder {
+      color: lightslategray;
+      font-size: 0.7rem;
+      font-style: italic;
+    }
+    .err-msg {
+      display: none;
+      color: tomato;
+      font-size: 0.7rem;
+      font-style: italic;
+    }
+    .err-msg.on {
+      display: inline-block;
+    }
+  </style>
+  <script src="/js/board/all.js" async></script>
+</head>
+<body>
+  <h3>게시글 작성</h3>
+  <form action="/boards/writing" method="post">
+    <div class="content">
+      <label for="title">제목</label>
+      <input id="title" type="text" name="title" placeholder="영문/숫자/한글 1~10 자리 입력" th:value="${writingForm.title}">
+      <span class="err-msg" th:if="${s_err_title != ''}" th:class="'err_msg on'" th:text="${s_err_title}"></span>
+    </div>
+    <div class="content">
+      <label for="writer">작성자</label>
+      <input id="writer" type="text" name="writer" placeholder="영문/한글 1~10 자리 입력" th:value="${writingForm.writer}">
+      <span class="err-msg" th:if="${s_err_writer != ''}" th:class="'err_msg on'" th:text="${s_err_writer}"></span>
+    </div>
+    <div class="content">
+      <p>내용</p>
+      <textarea name="material" id="material" cols="30" rows="10" placeholder="한 글자 이상 입력" th:value="${writingForm.material}"></textarea>
+      <span class="err-msg" th:if="${s_err_material != ''}" th:class="'err_msg on'" th:text="${s_err_material}"></span>
+    </div>
+    <div  class="btnBox">
+      <input type="reset" value="취소">
+      <input type="submit" value="저장">
+      <input id="listBtn" type="button" value="목록" onclick="location.href='/boards'">
+    </div>
+  </form>
+</body>
+</html>

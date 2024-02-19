@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="ko"
+      xmlns:th="http://www.thhymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>게시글 조회</title>
+  <link rel="stylesheet" href="/css/board/all.css">
+</head>
+<body>
+  <h3>게시글 조회</h3>
+  <form action="#" method="post" id="frm" class="detail">
+    <div class="content">
+      <label for="title">제목</label>
+      <input id="title" name="title" type="text" th:value="${board.title}" readonly>
+    </div>
+    <div class="content">
+      <label for="writer">작성자</label>
+      <input id="writer" name="writer" type="text" th:value="${board.writer}" readonly>
+    </div>
+    <div class="content">
+      <label for="userId">아이디</label>
+      <input id="userId" name="userId" type="text" th:value="${board.userId}" readonly>
+    </div>
+    <div class="content">
+      <label for="material">내용</label>
+      <textarea name="material" id="material" cols="30" rows="10" th:text="${board.material}" readonly></textarea>
+    </div>
+    <div class="content">
+      <label for="cdate">작성일</label>
+      <input id="cdate" name="cdate" type="text" th:value="${board.cdate}" readonly>
+    </div>
+    <div class="content">
+      <label for="udate">수정일</label>
+      <input id="udate" name="udate" type="text" th:value="${board.udate}" readonly>
+    </div>
+  </form>
+  <dialog id="delModal">
+    <p>삭제하시겠습니까?</p>
+    <form action="">
+      <button id="cancelBtn">취소</button>
+      <button id="delItemBtn">삭제</button>
+    </form>
+  </dialog>
+  <div class="btnBox">
+    <input id="modifyBtn" type="button" value="수정">
+    <input id="deleteBtn" type="button" value="삭제">
+    <input id="listBtn" type="button" value="목록" onclick="location.href='/boards'">
+  </div>
+  <script>
+    const uid = document.getElementById('userId').value;
+    const $modifyBtn = document.getElementById('modifyBtn');
+    const $deleteBtn = document.getElementById('deleteBtn');
+    const $delModal = document.getElementById('delModal');
+    const $delItemBtn = document.getElementById('delItemBtn');
+    const $cancelBtn = document.getElementById('cancelBtn');
+
+    // 수정
+    $modifyBtn.addEventListener('click', evt => {
+      location.href = `/boards/${uid}/edit`;
+    });
+
+    // 삭제
+    $deleteBtn.addEventListener('click', evt => {
+      $delModal.showModal();
+    });
+    $delModal.addEventListener('close', evt => {
+      if ($delModal.returnValue == 'ok') {
+        location.href = `/boards/${uid}/delete`;
+      }
+    });
+    $cancelBtn.addEventListener('click', evt => {
+      $delModal.close('cancel');
+    });
+    $delItemBtn.addEventListener('click', evt => {
+      $delModal.close('ok');
+    })
+  </script>
+</body>
+</html>

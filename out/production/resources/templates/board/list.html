@@ -5,95 +5,76 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>게시글 목록</title>
   <link rel="stylesheet" href="/css/board/all.css">
+  <link rel="stylesheet" href="/css/board/list.css">
 </head>
 <body>
-<form id="frm" action="/boards" method="POST">
-  <h3>게시글 목록</h3>
-  <table>
-    <thead>
-    <tr>
-      <td id="selectAll"><input type="checkbox"></td>
-      <td>제목</td>
-      <td>작성자</td>
-    </tr>
-    </thead>
-    <tbody id="rows">
-    <tr class="row" th:each="board :${list}" th:data-userId="${board.userId}">
-      <td class="chk"><input type="checkbox" name="uids" th:value="${board.userId}"></td>
-      <td th:text="${board.title}"></td>
-      <td th:text="${board.writer}"></td>
-    </tr>
-    </tbody>
-  </table>
-  <div class="btnBox">
-    <button id="deleteBtn" type="button">삭제</button>
-    <button type="button" id="addBtn">등록</button>
-  </div>
-</form>
-<div id="delModal">
-  <span>
-    <p>삭제하시겠습니까?</p>
-    <form id="delForm" action="/boards/delete" method="POST">
-      <button id="cancelBtn" type="button">취소</button>
-      <button id="delItemBtn" type="submit">삭제</button>
-    </form>
-</span>
-</div>
-<script>
-  const $rows = document.getElementById('rows');
-  const $addBtn = document.getElementById('addBtn');
-  const $selectAll = document.getElementById('selectAll');
-  const frm = document.getElementById('frm');
-  const $deleteBtn = document.getElementById('deleteBtn');
-  const $delModal = document.getElementById('delModal');
-  const $delItemBtn = document.getElementById('delItemBtn');
-  const $cancelBtn = document.getElementById('cancelBtn');
+  <form id="frm" action="/boards/delete" method="POST">
+    <h3>게시글 목록</h3>
+    <table>
+      <thead>
+      <tr>
+        <td id="selectAll"><input type="checkbox"></td>
+        <td>제목</td>
+        <td>작성자</td>
+      </tr>
+      </thead>
+      <tbody id="rows">
+      <tr class="row" th:each="board :${list}" th:data-userId="${board.userId}">
+        <td class="chk"><input type="checkbox" name="uids" th:value="${board.userId}"></td>
+        <td th:text="${board.title}"></td>
+        <td th:text="${board.writer}"></td>
+      </tr>
+      </tbody>
+    </table>
+    <div class="btnBox">
+      <button type="submit" id="deleteBtn">삭제</button>
+      <button type="button" id="addBtn">등록</button>
+    </div>
+  </form>
+  <script>
+    const $rows = document.getElementById('rows');
+    const $addBtn = document.getElementById('addBtn');
+    const $selectAll = document.getElementById('selectAll');
+    const $frm = document.getElementById('frm');
+    const $deleteBtn = document.getElementById('deleteBtn');
 
-  // 게시글 이동
-  $rows.addEventListener('click', evt => {
-    if (evt.target.tagName === 'INPUT' && evt.target.getAttribute('type') == 'checkbox') {
-      return;
-    }
-    if (evt.target.tagName == 'TD' && evt.target.classList.contains('chk')) {
-      return;
-    }
-    const $row = evt.target.closest('.row');
-    const uid = $row.getAttribute('data-userId');
-    if (uid) {
-      location.href = `/boards/${uid}/post`;
-    }
-  });
+    // 게시글 이동
+    $rows.addEventListener('click', evt => {
+      if (evt.target.tagName === 'INPUT' && evt.target.getAttribute('type') == 'checkbox') {
+        return;
+      }
+      if (evt.target.tagName == 'TD' && evt.target.classList.contains('chk')) {
+        return;
+      }
+      const $row = evt.target.closest('.row');
+      const uid = $row.getAttribute('data-userId');
+      if (uid) {
+        location.href = `/boards/${uid}/post`;
+      }
+    });
 
-  // 목록 이동
-  $addBtn.addEventListener('click', evt => {
-    location.href = '/boards/writing';
-  });
+    // 목록 이동
+    $addBtn.addEventListener('click', evt => {
+      location.href = '/boards/writing';
+    });
 
-  // 전체 선택
-  $selectAll.addEventListener('click', evt => {
-    const $inputs = Array.from(document.querySelectorAll('#rows input[type=checkbox]'));
-    const isSomeChecked = $inputs.some(inputEle => inputEle.checked == true)
-    if (isSomeChecked) {
-      $inputs.forEach(input => input.checked = false);
-    } else {
-      $inputs.forEach(input => input.checked = true);
-    }
-  });
+    // 전체 선택
+    $selectAll.addEventListener('click', evt => {
+      const $inputs = Array.from(document.querySelectorAll('#rows input[type=checkbox]'));
+      const isSomeChecked = $inputs.some(inputEle => inputEle.checked == true)
+      if (isSomeChecked) {
+        $inputs.forEach(input => input.checked = false);
+      } else {
+        $inputs.forEach(input => input.checked = true);
+      }
+    });
 
-  // 삭제 버튼 클릭 시 모달 표시
-  $deleteBtn.addEventListener('click', evt => {
-    document.getElementById('delModal').style.display = 'block';
-  });
-
-  // 취소 버튼 클릭 시 모달 숨기기
-  $cancelBtn.addEventListener('click', evt => {
-    document.getElementById('delModal').style.display = 'none';
-  });
-
-  // 삭제 버튼 클릭 시 폼 전송
-  $delItemBtn.addEventListener('click', evt => {
-    document.getElementById('delForm').submit();
-  });
-</script>
+    // 삭제
+    $frm.addEventListener('submit', evt => {
+      evt.preventDefault();    // 기본 이벤트(submit) 중지
+      if(!window.confirm('삭제하시겠습니까?')) return;
+      evt.target.submit();
+    });
+  </script>
 </body>
 </html>

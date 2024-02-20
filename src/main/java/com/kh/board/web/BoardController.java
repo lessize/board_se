@@ -2,6 +2,7 @@ package com.kh.board.web;
 
 import com.kh.board.domain.board.svc.BoardSVC;
 import com.kh.board.domain.entity.Board;
+import com.kh.board.web.board.UpdateForm;
 import com.kh.board.web.board.WritingForm;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
@@ -105,12 +106,28 @@ public class BoardController {
   // 게시글 수정 내역 저장
   @PostMapping("/{uid}/edit")
   public String update(@PathVariable("uid") Long userId,
-                       @RequestParam("title") String title,
-                       @RequestParam("material") String material,
-                       RedirectAttributes redirectAttributes) {
+                       UpdateForm updateForm,
+                       RedirectAttributes redirectAttributes,
+                       Model model) {
+    // 유효성 체크
+    String pattern = "^[0-9a-zA-Zㄱ-ㅎ가-힣 ]{1,10}$";
+    // 제목
+    if (!Pattern.matches(pattern, updateForm.getTitle())) {
+      model.addAttribute("updateForm", updateForm);
+      model.addAttribute("s_err_title", "영문/숫자/한글 1~10 자리 입력");
+      return "board/update";
+    }
+    // 내용
+    pattern = "[\\s\\S]{1,}";
+    if (!Pattern.matches(pattern, updateForm.getMaterial())) {
+      model.addAttribute("updateForm", updateForm);
+      model.addAttribute("s_err_material", "한 글자 이상 입력");
+      return "board/update";
+    }
+
     Board board = new Board();
-    board.setTitle(title);
-    board.setMaterial(material);
+    board.setTitle(updateForm.getTitle());
+    board.setMaterial(updateForm.getMaterial());
 
     boardSVC.updateById(userId, board);
 

@@ -6,8 +6,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>게시글 조회</title>
   <link rel="stylesheet" href="/css/board/all.css">
+  <link rel="stylesheet" href="/css/board/posting.css">
 </head>
-<body>
+<body class="posting">
   <h3>게시글 조회</h3>
   <form action="#" method="post" id="frm" class="detail">
     <div class="content">
@@ -18,15 +19,15 @@
       <label for="writer">작성자</label>
       <input id="writer" name="writer" type="text" th:value="${board.writer}" readonly>
     </div>
-    <div class="content">
+    <div class="content noline">
       <label for="userId">아이디</label>
       <input id="userId" name="userId" type="text" th:value="${board.userId}" readonly>
     </div>
-    <div class="content">
-      <label for="material">내용</label>
+    <div class="content  noline">
+<!--      <label for="material">내용</label>-->
       <textarea name="material" id="material" cols="30" rows="10" th:text="${board.material}" readonly></textarea>
     </div>
-    <div class="content">
+    <div class="content  noline">
       <label for="cdate">작성일</label>
       <input id="cdate" name="cdate" type="text" th:value="${board.cdate}" readonly>
     </div>

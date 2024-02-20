@@ -1,0 +1,63 @@
+body #frm .content  {
+  font-size: large;
+  border-bottom: 1px solid #333;
+  width: 500px;
+}
+
+body #frm .content.noline {
+  border: 0;
+}
+
+body #frm .content  label {
+  display: inline-block;
+  width: 100px;
+  font-weight: bold;
+  margin: 0 25px;
+}
+
+body #frm .content input {
+  border: 0;
+  width: 300px;
+}
+
+body #frm .content input:focus {
+  outline: none;
+}
+
+body #frm .content textarea {
+  resize: none;
+  width: 500px;
+  height: 300px;
+}
+
+body #frm .content textarea:focus {
+  outline: none;
+}
+
+body #frm .content .err-msg {
+      display: none;
+      color: tomato;
+      font-size: 0.7rem;
+      font-style: italic;
+}
+body #frm .content .err-msg.on {
+      display: inline-block;
+}
+
+body .btnBox #updateBtn {
+  width: 70px;
+  line-height: 25px;
+  margin-left: 0;
+  margin-right: 20px;
+  background-color: lightgray;
+  border: 0px;
+}
+
+body .btnBox input {
+  width: 70px;
+  line-height: 25px;
+  margin-left: 0;
+  margin-right: 20px;
+  background-color: lightgray;
+  border: 0px;
+}

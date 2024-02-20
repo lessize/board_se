@@ -1,0 +1,40 @@
+/* 게시글 목록 */
+body #frm {
+  width: 500px;
+}
+
+body #frm table {
+  width: 100%;
+  color: rgb(72, 72, 83);
+}
+
+body #frm table td {
+  border-bottom: 1px solid lightgray;
+}
+
+body #frm table thead #selectAll {
+  width: 50px;
+}
+
+body #frm table thead td:last-child {
+  width: 120px;
+}
+
+body #frm div:nth-child(3) {
+  width: 500px;
+  height: 50px;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+}
+
+body #frm div:nth-child(3) button {
+  width: 70px;
+  line-height: 25px;
+  margin-left: 0;
+  margin-right: 20px;
+  background-color: lightgray;
+  border: 0px;
+}
+
+

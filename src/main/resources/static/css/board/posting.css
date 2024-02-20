@@ -1,0 +1,36 @@
+/* 게시글 조회 */
+body #frm.detail .content  {
+  font-size: large;
+  border-bottom: 1px solid #333;
+  width: 500px;
+}
+
+body #frm.detail .content.noline {
+  border: 0;
+}
+
+body #frm.detail .content  label {
+  display: inline-block;
+  width: 100px;
+  font-weight: bold;
+  margin: 0 25px;
+}
+
+body #frm.detail .content input {
+  border: 0;
+  width: 300px;
+}
+
+body #frm.detail .content input:focus {
+  outline: none;
+}
+
+body #frm.detail .content textarea {
+  resize: none;
+  width: 500px;
+  height: 300px;
+}
+
+body #frm.detail .content textarea:focus {
+  outline: none;
+}

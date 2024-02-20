@@ -6,25 +6,27 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>게시글 수정</title>
   <link rel="stylesheet" href="/css/board/all.css">
+  <link rel="stylesheet" href="/css/board/update.css">
 </head>
 <body>
   <h3>게시글 수정</h3>
   <form action="" method="post" id="frm">
     <div class="content">
       <label for="userId">아이디</label>
-      <input id="userId" name="userId" type="text" th:value="${board.userId}">
+      <input id="userId" name="userId" type="text" th:value="${board != null ? board.userId : ''}">
     </div>
     <div class="content">
       <label for="title">제목</label>
-      <input id="title" name="title" type="text" th:value="${board.title}">
+      <input id="title" name="title" type="text" th:value="${board != null ? board.title : ''}">
+      <span class="err-msg" th:if="${s_err_title != ''}" th:class="'err-msg on'" th:text="${s_err_title}"></span>
     </div>
-    <div class="content">
+    <div class="content noline">
       <label for="writer">작성자</label>
-      <input id="writer" name="writer" type="text" th:value="${board.writer}" readonly>
+      <input id="writer" name="writer" type="text" th:value="${board != null ? board.writer : ''}">
     </div>
-    <div class="content">
-      <label for="material">내용</label>
-      <textarea name="material" id="material" cols="30" rows="10" th:text="${board.material}"></textarea>
+    <div class="content noline">
+      <textarea name="material" id="material" cols="30" rows="10" th:text="${board != null ? board.material : ''}"></textarea>
+      <span class="err-msg" th:if="${s_err_material != ''}" th:class="'err-msg on'" th:text="${s_err_material}"></span>
     </div>
   </form>
   <div class="btnBox">
@@ -34,8 +36,11 @@
   </div>
   <script>
     const uid = document.getElementById('userId').value;
+
     const updateBtn = document.getElementById('updateBtn');
     updateBtn.addEventListener('click', evt => {
+      const uid = document.getElementById('userId').value;
+      document.querySelector('form').action = `/boards/${uid}/edit`;
       document.querySelector('form').submit();
     });
   </script>

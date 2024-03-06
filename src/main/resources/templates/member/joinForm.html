@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="ko"
+      xmlns:th="http://www.thhymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>회원 가입</title>
+</head>
+<body>
+  <h3>회원 가입</h3>
+  <form id="frm" action="/join" method="post">
+    <p>
+      <input type="text" name="email" placeholder="이메일" id="email">
+      <button type="button" id="dupchkBtn">중복체크</button>
+      <span class="errmsg" id="errmsg_email"></span>
+    </p>
+    <p>
+      <input type="password" name="passwd" placeholder="비밀번호">
+    </p>
+    <p>
+      <input type="password" placeholder="비밀번호 확인">
+    </p>
+    <p>
+      <input type="text" name="nickname" placeholder="별칭">
+    </p>
+    <p>
+      <button id="joinBtn">가입</button>
+    </p>
+  </form>
+</body>
+</html>

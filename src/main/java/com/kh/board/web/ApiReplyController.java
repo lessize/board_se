@@ -14,6 +14,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
 import java.util.Optional;
 
 @Slf4j
@@ -24,28 +25,22 @@ public class ApiReplyController {
   private final BoardSVC boardSVC;
   private final ReplySVC replySVC;
 
-  //
-  @PostMapping
-  @RequestMapping("/boards/{uid}/post/reply")
-  public ApiResponse<?> add(@PathVariable("uid") Long uid,
-                            @RequestBody ReqSave reqSave,
-                            Model model) {
-    log.info("reqSave={}", reqSave);
+  @PostMapping("/api/boards/{uid}/reply")
+  public ApiResponse<ResSave> addReply(@PathVariable("uid") Long userId,
+                                       @RequestBody ReqSave reqSave) {
+    log.info("Request to add reply: {}", reqSave);
 
-    Optional<Board> postId = boardSVC.findById(uid);
-    Board board = postId.orElseThrow();
-    model.addAttribute("board", board);
-
+    // 댓글 생성 및 데이터 복사
     Reply reply = new Reply();
     BeanUtils.copyProperties(reqSave, reply);
-    Long userId = replySVC.rpSave(reply);
+    reply.setUserId(userId); // 댓글이 속한 게시글 ID 설정
+    reply.setCdate(LocalDateTime.now()); // 작성일자 설정
 
-    ResSave resSave = new ResSave(userId, reqSave.getWriter(), reqSave.getCommentary());
+    // 댓글 저장
+    Long replyId = replySVC.rpSave(reply);
 
-    String rtDetail = "commentary : " + resSave;
-
-    ApiResponse<ResSave> res = ApiResponse.createApiResponseDetail(ResCode.OK.getCode(), ResCode.OK.name(), rtDetail, resSave);
-
-    return res;
+    // 응답 생성
+    ResSave resSave = new ResSave(replyId, reqSave.getWriter(), reqSave.getCommentary());
+    return ApiResponse.createApiResponseDetail(ResCode.OK.getCode(), ResCode.OK.name(), "댓글이 성공적으로 저장되었습니다.", resSave);
   }
 }

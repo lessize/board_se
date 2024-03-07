@@ -48,10 +48,10 @@
     <input id="listBtn" type="button" value="목록" onclick="location.href='/boards'">
   </div>
   <div id="replyList">
-    <div>
+    <form>
       <textarea name="" id="rpContent" cols="10" rows="10" placeholder="댓글을 입력하세요"></textarea>
-      <button id="rpSaveBtn">등록</button>
-    </div>
+      <button id="rpSaveBtn" type="button">등록</button>
+    </form>
     <div>
       <p></p>
       <div></div>
@@ -91,27 +91,29 @@
     })
 
     $rpSaveBtn.addEventListener('click', evt => {
-      const rpContent = document.getElementById('rpContent').value;
+      const uid = document.getElementById('userId').value; // userId 값을 가져옴
 
-      const data = {
-        rpContent: rpContent
-      };
-
-      fetch(`/boards/${uid}/post/reply`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(data)
+      fetch(`/api/boards/${uid}/reply`, {
+          method: 'POST',
+          headers: {
+              'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+              writer: uid,
+              commentary: rpContent.value
+          })
       })
       .then(response => {
-        if (!response.ok) {
-          throw new Error('댓글 저장에 실패했습니다.');
-        }
-        alert('댓글이 성공적으로 저장되었습니다.');
+          if (!response.ok) {
+              throw new Error('서버에서 응답을 가져오지 못했습니다.');
+          }
+          return response.json(); // JSON 형식으로 응답을 파싱
+      })
+      .then(data => {
+          console.log(data); // 응답 데이터를 콘솔에 출력하거나 다른 처리를 수행
       })
       .catch(error => {
-        alert(error.message);
+          console.error('에러 발생:', error);
       });
     });
 

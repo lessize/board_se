@@ -24,7 +24,6 @@
       <input id="userId" name="userId" type="text" th:value="${board.userId}" readonly>
     </div>
     <div class="content  noline">
-<!--      <label for="material">내용</label>-->
       <textarea name="material" id="material" cols="30" rows="10" th:text="${board.material}" readonly></textarea>
     </div>
     <div class="content  noline">
@@ -48,6 +47,18 @@
     <input id="deleteBtn" type="button" value="삭제">
     <input id="listBtn" type="button" value="목록" onclick="location.href='/boards'">
   </div>
+  <div id="replyList">
+    <div>
+      <textarea name="" id="rpContent" cols="10" rows="10" placeholder="댓글을 입력하세요"></textarea>
+      <button id="rpSaveBtn">등록</button>
+    </div>
+    <div>
+      <p></p>
+      <div></div>
+      <button>수정</button>
+      <button>삭제</button>
+    </div>
+  </div>
   <script>
     const uid = document.getElementById('userId').value;
     const $modifyBtn = document.getElementById('modifyBtn');
@@ -55,6 +66,8 @@
     const $delModal = document.getElementById('delModal');
     const $delItemBtn = document.getElementById('delItemBtn');
     const $cancelBtn = document.getElementById('cancelBtn');
+    const $replyList = document.getElementById('replyList');
+    const $rpSaveBtn = document.getElementById('rpSaveBtn');
 
     // 수정
     $modifyBtn.addEventListener('click', evt => {
@@ -76,6 +89,32 @@
     $delItemBtn.addEventListener('click', evt => {
       $delModal.close('ok');
     })
+
+    $rpSaveBtn.addEventListener('click', evt => {
+      const rpContent = document.getElementById('rpContent').value;
+
+      const data = {
+        rpContent: rpContent
+      };
+
+      fetch(`/boards/${uid}/post/reply`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(data)
+      })
+      .then(response => {
+        if (!response.ok) {
+          throw new Error('댓글 저장에 실패했습니다.');
+        }
+        alert('댓글이 성공적으로 저장되었습니다.');
+      })
+      .catch(error => {
+        alert(error.message);
+      });
+    });
+
   </script>
 </body>
 </html>

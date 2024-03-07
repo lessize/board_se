@@ -34,3 +34,14 @@ body #frm.detail .content textarea {
 body #frm.detail .content textarea:focus {
   outline: none;
 }
+
+body #replyList #rpContent {
+  resize: none;
+  width: 400px;
+  height: 50px;
+}
+
+body #replyList #rpSaveBtn {
+  width: 50px;
+  height: 50px;
+}

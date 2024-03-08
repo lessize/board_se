@@ -8,6 +8,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.jdbc.JdbcTestUtils;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 @Slf4j
@@ -29,5 +31,23 @@ class ReplyDAOImplTest {
     Long replyId = replyDAO.rpSave(reply);
 
     log.info("replyId={}", replyId);
+  }
+
+//  @Test
+//  void findAll() {
+//    List<Reply> list = replyDAO.findAll(1L,1L, 5L);
+//    for (Reply reply : list) {
+//      log.info("reply={}", reply);
+//    }
+//    log.info("size={}", list.size());
+//  }
+
+  @Test
+  void testFindAll() {
+    List<Reply> list = replyDAO.findAll();
+    for (Reply reply : list) {
+      log.info("reply={}", reply);
+    }
+    log.info("size={}", list.size());
   }
 }

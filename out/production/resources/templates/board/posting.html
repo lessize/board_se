@@ -7,6 +7,7 @@
   <title>게시글 조회</title>
   <link rel="stylesheet" href="/css/board/all.css">
   <link rel="stylesheet" href="/css/board/posting.css">
+  <script type="module" src="/js/common.js" async></script>
 </head>
 <body class="posting">
   <h3>게시글 조회</h3>
@@ -20,7 +21,7 @@
       <input id="writer" name="writer" type="text" th:value="${board.writer}" readonly>
     </div>
     <div class="content noline">
-      <label for="userId">아이디</label>
+      <label for="userId">게시글 번호</label>
       <input id="userId" name="userId" type="text" th:value="${board.userId}" readonly>
     </div>
     <div class="content  noline">
@@ -47,19 +48,21 @@
     <input id="deleteBtn" type="button" value="삭제">
     <input id="listBtn" type="button" value="목록" onclick="location.href='/boards'">
   </div>
-  <div id="replyList">
-    <form>
+  <div id="replyBox">
+    <form id="rpfrm">
+      <p th:text="${session.loginMember.nickname}"></p>
       <textarea name="" id="rpContent" cols="10" rows="10" placeholder="댓글을 입력하세요"></textarea>
       <button id="rpSaveBtn" type="button">등록</button>
     </form>
-    <div>
-      <p></p>
-      <div></div>
-      <button>수정</button>
-      <button>삭제</button>
-    </div>
+    <div id="replyList"></div>
   </div>
-  <script>
+  <div id="pagination"></div>
+  <script type="module">
+    import {Pagination} from '/js/common.js'
+
+    //페이징 객체 생성
+    const pagination = new Pagination(10, 10); // 한페이지에 보여줄 레코드건수,한페이지에 보여줄 페이지수
+
     const uid = document.getElementById('userId').value;
     const $modifyBtn = document.getElementById('modifyBtn');
     const $deleteBtn = document.getElementById('deleteBtn');
@@ -90,8 +93,9 @@
       $delModal.close('ok');
     })
 
+    // 댓글 등록
     $rpSaveBtn.addEventListener('click', evt => {
-      const uid = document.getElementById('userId').value; // userId 값을 가져옴
+      const rpUser = document.querySelector('#rpfrm p').innerText;
 
       fetch(`/api/boards/${uid}/reply`, {
           method: 'POST',
@@ -99,7 +103,7 @@
               'Content-Type': 'application/json'
           },
           body: JSON.stringify({
-              writer: uid,
+              writer: rpUser,
               commentary: rpContent.value
           })
       })
@@ -107,16 +111,83 @@
           if (!response.ok) {
               throw new Error('서버에서 응답을 가져오지 못했습니다.');
           }
-          return response.json(); // JSON 형식으로 응답을 파싱
+          return response.json(); // JSON 형식으로 응답
       })
       .then(data => {
-          console.log(data); // 응답 데이터를 콘솔에 출력하거나 다른 처리를 수행
+        if (data.header.rtcd === "00") { // 정상적인 응답인 경우
+          const replyList = document.getElementById('replyList');
+          const newReply = data.body;
+
+          // 새로운 댓글을 화면에 추가
+          const replyElement = document.createElement('div');
+          replyElement.innerHTML = `
+              <div>
+                  <span>${newReply.writer}</span>
+                  <span>${newReply.cdate}</span>
+                  <p>${newReply.commentary}</p>
+              </div>
+              <div>
+                  <button>수정</button>
+                  <button>삭제</button>
+              </div>
+          `;
+          replyList.appendChild(replyElement);
+        } else {
+          console.error('댓글 등록에 실패했습니다.');
+        }
       })
       .catch(error => {
           console.error('에러 발생:', error);
       });
     });
 
+    // 목록
+    findReply();
+    function findReply() {
+      const reqPage = 1; // 예시로 페이지 번호를 1로 설정
+      const reqCnt = 10; // 예시로 한 페이지에 보여줄 댓글 수를 10으로 설정
+
+      fetch(`/api/boards/${uid}/reply`, {
+        method: 'GET',
+        headers: {
+           'Content-Type': 'application/json'
+        }
+      })
+      .then(response => {
+        if (!response.ok) {
+           throw new Error('서버에서 응답을 가져오지 못했습니다.');
+        }
+        return response.json(); // JSON 형식으로 응답을 파싱
+      })
+      .then(data => {
+        console.log(data);
+
+        const replyList = document.getElementById('replyList');
+        const userId = document.getElementById('userId').value;
+
+        // 댓글 목록을 출력할 때 댓글 작성자의 userId와 게시글의 userId가 일치할 경우에만 출력
+        data.body.forEach(reply => {
+          if (reply.userId == userId) {
+            const replyElement = document.createElement('div');
+            replyElement.innerHTML = `
+                      <div>
+                          <span>${reply.writer}</span>
+                          <p>${reply.commentary}</p>
+                      </div>
+                      <div>
+                          <button>수정</button>
+                          <button>삭제</button>
+                      </div>
+                  `;
+
+            replyList.appendChild(replyElement);
+          }
+        });
+      })
+      .catch(error => {
+        console.error('에러 발생:', error);
+      });
+    }
   </script>
 </body>
 </html>

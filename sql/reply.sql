@@ -40,5 +40,6 @@ insert into reply (reply_id, user_id, commentary, writer) values (reply_reply_id
 insert into reply (reply_id, user_id, commentary, writer) values (reply_reply_id_seq.nextval, 6, 'lorem5', 'EVA');
 insert into reply (reply_id, user_id, commentary, writer) values (reply_reply_id_seq.nextval, 6, 'lorem6', 'FELIX');
 
+alter table reply add email varchar2(50);
 
 commit;

@@ -15,17 +15,18 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 
 @Slf4j
 @RestController
 @RequiredArgsConstructor
+@RequestMapping("/api/boards/{uid}/reply")
 public class ApiReplyController {
 
-  private final BoardSVC boardSVC;
   private final ReplySVC replySVC;
 
-  @PostMapping("/api/boards/{uid}/reply")
+  @PostMapping
   public ApiResponse<ResSave> addReply(@PathVariable("uid") Long userId,
                                        @RequestBody ReqSave reqSave) {
     log.info("Request to add reply: {}", reqSave);
@@ -43,4 +44,15 @@ public class ApiReplyController {
     ResSave resSave = new ResSave(replyId, reqSave.getWriter(), reqSave.getCommentary());
     return ApiResponse.createApiResponseDetail(ResCode.OK.getCode(), ResCode.OK.name(), "댓글이 성공적으로 저장되었습니다.", resSave);
   }
+
+    // 목록
+    @GetMapping
+    public ApiResponse<List<Reply>> list(@PathVariable("uid") Long userId) {
+
+      List<Reply> list = replySVC.findAll();
+
+      ApiResponse<List<Reply>> response = ApiResponse.createApiResponse(ResCode.OK.getCode(), ResCode.OK.name(), list);
+      response.setTotalCnt(list.size());
+      return response;
+    }
 }

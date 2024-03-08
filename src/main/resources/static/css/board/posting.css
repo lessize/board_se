@@ -35,13 +35,13 @@ body #frm.detail .content textarea:focus {
   outline: none;
 }
 
-body #replyList #rpContent {
+body #replyBox #rpContent {
   resize: none;
   width: 400px;
   height: 50px;
 }
 
-body #replyList #rpSaveBtn {
+body #replyBox #rpSaveBtn {
   width: 50px;
   height: 50px;
 }

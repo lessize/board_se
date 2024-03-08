@@ -54,21 +54,22 @@ public class ReplyDAOImpl implements ReplyDAO {
     return list;
   }
 
-//  // 목록
-//  @Override
-//  public List<Reply> findAll(Long userId, Long reqPage, Long recCnt) {
-//    StringBuffer sql = new StringBuffer();
-//    sql.append("select reply_id, user_Id, commentary, writer, cdate, udate ");
-//    sql.append("  from reply ");
-//    sql.append(" where user_Id = :userId ");
-//    sql.append(" order by cdate asc");
-//    sql.append("offset (:reqPage - 1) * :recCnt rows fetch first :recCnt rows only ");
-//
-//    Map<String, Long> param = Map.of("userId", userId, "reqPage", reqPage, "recCnt", recCnt);
-//    List<Reply> list = template.query(sql.toString(), param, BeanPropertyRowMapper.newInstance(Reply.class));
-//
-//    return list;
-//  }
+  // 수정
+  @Override
+  public int updateByEmail(String email, Reply reply) {
+    StringBuffer sql = new StringBuffer();
+    sql.append("update reply ");
+    sql.append("   set commentary = :commentary ");
+    sql.append(" where usermail = :email ");
+
+    SqlParameterSource param = new MapSqlParameterSource()
+            .addValue("commentary", reply.getCommentary())
+            .addValue("usermail", reply.getUsermail());
+
+    int updated = template.update(sql.toString(), param);
+
+    return updated;
+  }
 
   @Override
   public int totalCnt() {

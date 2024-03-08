@@ -50,7 +50,8 @@
   </div>
   <div id="replyBox">
     <form id="rpfrm">
-      <p th:text="${session.loginMember.nickname}"></p>
+      <p th:text="${session.loginMember.nickname}" id="rpNickname"></p>
+      <p th:text="${session.loginMember.email}" id="rpEmail"></p>
       <textarea name="" id="rpContent" cols="10" rows="10" placeholder="댓글을 입력하세요"></textarea>
       <button id="rpSaveBtn" type="button">등록</button>
     </form>
@@ -95,7 +96,8 @@
 
     // 댓글 등록
     $rpSaveBtn.addEventListener('click', evt => {
-      const rpUser = document.querySelector('#rpfrm p').innerText;
+      const rpUser = document.querySelector('#rpfrm #rpNickname').innerText;
+      const rpEmail = document.querySelector('#rpfrm #rpEmail').innerText;
 
       fetch(`/api/boards/${uid}/reply`, {
           method: 'POST',
@@ -104,7 +106,8 @@
           },
           body: JSON.stringify({
               writer: rpUser,
-              commentary: rpContent.value
+              commentary: rpContent.value,
+              email: rpEmail
           })
       })
       .then(response => {
@@ -114,7 +117,7 @@
           return response.json(); // JSON 형식으로 응답
       })
       .then(data => {
-        if (data.header.rtcd === "00") { // 정상적인 응답인 경우
+        if (data.header.rtcd === "00") {
           const replyList = document.getElementById('replyList');
           const newReply = data.body;
 
@@ -123,7 +126,6 @@
           replyElement.innerHTML = `
               <div>
                   <span>${newReply.writer}</span>
-                  <span>${newReply.cdate}</span>
                   <p>${newReply.commentary}</p>
               </div>
               <div>
@@ -144,8 +146,8 @@
     // 목록
     findReply();
     function findReply() {
-      const reqPage = 1; // 예시로 페이지 번호를 1로 설정
-      const reqCnt = 10; // 예시로 한 페이지에 보여줄 댓글 수를 10으로 설정
+      const reqPage = 1; // 페이지 번호를 1로 설정
+      const reqCnt = 10; // 한 페이지에 보여줄 댓글 수를 10으로 설정
 
       fetch(`/api/boards/${uid}/reply`, {
         method: 'GET',
@@ -165,13 +167,13 @@
         const replyList = document.getElementById('replyList');
         const userId = document.getElementById('userId').value;
 
-        // 댓글 목록을 출력할 때 댓글 작성자의 userId와 게시글의 userId가 일치할 경우에만 출력
         data.body.forEach(reply => {
           if (reply.userId == userId) {
             const replyElement = document.createElement('div');
             replyElement.innerHTML = `
                       <div>
                           <span>${reply.writer}</span>
+                          <span>${reply.email}</span>
                           <p>${reply.commentary}</p>
                       </div>
                       <div>

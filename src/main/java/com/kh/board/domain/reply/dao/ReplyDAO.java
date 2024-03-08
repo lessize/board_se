@@ -12,8 +12,8 @@ public interface ReplyDAO {
   // 댓글 목록
   List<Reply> findAll();
 
-  // 댓글 목록
-//  List<Reply> findAll(Long userId, Long reqPage, Long recCnt);
+  // 댓글 수정
+  public int updateByEmail(String email, Reply reply);
 
   // 총 레코드 건수
   int totalCnt();

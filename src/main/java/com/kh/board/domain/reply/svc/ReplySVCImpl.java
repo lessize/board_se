@@ -25,10 +25,10 @@ public class ReplySVCImpl implements ReplySVC{
     return replyDAO.findAll();
   }
 
-  //  @Override
-//  public List<Reply> findAll(Long userId, Long reqPage, Long recCnt) {
-//    return replyDAO.findAll(userId, reqPage, recCnt);
-//  }
+  @Override
+  public int updateByEmail(String email, Reply reply) {
+    return replyDAO.updateByEmail(email, reply);
+  }
 
   @Override
   public int totalCnt() {

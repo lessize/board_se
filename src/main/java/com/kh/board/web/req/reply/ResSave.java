@@ -9,4 +9,5 @@ public class ResSave {
   private Long userId;
   private String writer;
   private String commentary;
+  private String usermail;
 }

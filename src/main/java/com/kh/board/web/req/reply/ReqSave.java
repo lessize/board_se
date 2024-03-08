@@ -10,4 +10,5 @@ import lombok.NoArgsConstructor;
 public class ReqSave {
   private String commentary;
   private String writer;
+  private String usermail;
 }

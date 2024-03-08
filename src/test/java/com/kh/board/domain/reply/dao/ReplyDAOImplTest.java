@@ -50,4 +50,15 @@ class ReplyDAOImplTest {
     }
     log.info("size={}", list.size());
   }
+
+  @Test
+  @Transactional
+  void updateByEmail() {
+    String email = "user3@kh.com";
+    Reply reply = new Reply();
+    reply.setCommentary("changed commentary");
+    reply.setUsermail(email);
+
+    log.info("reply={}", reply);
+  }
 }

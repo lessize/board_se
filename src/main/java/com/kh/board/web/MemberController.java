@@ -48,8 +48,10 @@ public class MemberController {
 
         LoginMember loginMember = new LoginMember(member.getMemberId(), member.getEmail(), member.getPasswd(), member.getNickname());
         session.setAttribute("loginMember", loginMember);
+        session.setAttribute("email={}", loginMember.getEmail());
 
         log.info("loginMember={}", loginMember);
+        log.info("email={}", loginMember.getEmail());
       } else {
         return "/login";
       }

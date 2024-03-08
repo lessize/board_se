@@ -41,18 +41,26 @@ public class ApiReplyController {
     Long replyId = replySVC.rpSave(reply);
 
     // 응답 생성
-    ResSave resSave = new ResSave(replyId, reqSave.getWriter(), reqSave.getCommentary());
+    ResSave resSave = new ResSave(replyId, reqSave.getWriter(), reqSave.getCommentary(), reqSave.getUsermail());
     return ApiResponse.createApiResponseDetail(ResCode.OK.getCode(), ResCode.OK.name(), "댓글이 성공적으로 저장되었습니다.", resSave);
   }
 
-    // 목록
-    @GetMapping
-    public ApiResponse<List<Reply>> list(@PathVariable("uid") Long userId) {
+  // 목록
+  @GetMapping
+  public ApiResponse<List<Reply>> list(@PathVariable("uid") Long userId) {
 
-      List<Reply> list = replySVC.findAll();
+    List<Reply> list = replySVC.findAll();
 
-      ApiResponse<List<Reply>> response = ApiResponse.createApiResponse(ResCode.OK.getCode(), ResCode.OK.name(), list);
-      response.setTotalCnt(list.size());
-      return response;
-    }
+    ApiResponse<List<Reply>> response = ApiResponse.createApiResponse(ResCode.OK.getCode(), ResCode.OK.name(), list);
+    response.setTotalCnt(list.size());
+    return response;
+  }
+
+  // 수정
+  @PatchMapping("/{replyId}")
+  public ApiResponse<?> update () {
+    Reply reply = new Reply();
+//    BeanUtils.copyProperties();
+    return update();
+  }
 }

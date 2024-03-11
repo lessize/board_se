@@ -7,7 +7,9 @@ import com.kh.board.domain.reply.svc.ReplySVC;
 import com.kh.board.web.api.ApiResponse;
 import com.kh.board.web.api.ResCode;
 import com.kh.board.web.req.reply.ReqSave;
+import com.kh.board.web.req.reply.ReqUpdate;
 import com.kh.board.web.req.reply.ResSave;
+import com.kh.board.web.req.reply.ResUpdate;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
@@ -26,10 +28,11 @@ public class ApiReplyController {
 
   private final ReplySVC replySVC;
 
+  // 등록
   @PostMapping
   public ApiResponse<ResSave> addReply(@PathVariable("uid") Long userId,
                                        @RequestBody ReqSave reqSave) {
-    log.info("Request to add reply: {}", reqSave);
+    log.info("ReqSave={}", reqSave);
 
     // 댓글 생성 및 데이터 복사
     Reply reply = new Reply();
@@ -57,10 +60,29 @@ public class ApiReplyController {
   }
 
   // 수정
-  @PatchMapping("/{replyId}")
-  public ApiResponse<?> update () {
-    Reply reply = new Reply();
-//    BeanUtils.copyProperties();
-    return update();
+  @PatchMapping("/{rpNum}")
+  public ApiResponse<?> update (@PathVariable("uid") Long userId,
+                                @PathVariable("rpNum") Long replyId,
+                                @RequestBody ReqUpdate reqUpdate) {
+    String sessionEmail = reqUpdate.getUsermail();
+    log.info(sessionEmail);
+    return null;
+  }
+
+  // 삭제
+  @DeleteMapping("/{rid}")
+  public ApiResponse<?> deleteById(@PathVariable("uid") Long userId,
+                                   @PathVariable("rid") Long replyId) {
+    int deletedCnt = replySVC.deleteById(userId, replyId);
+
+    ApiResponse<ResUpdate> res = null;
+
+    if (deletedCnt == 1) {
+      res = ApiResponse.createApiResponse(ResCode.OK.getCode(), ResCode.OK.name(), null);
+    } else {
+      res = ApiResponse.createApiResponse(ResCode.FAIL.getCode(), ResCode.FAIL.name(), null);
+    }
+
+    return res;
   }
 }

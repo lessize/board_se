@@ -13,7 +13,10 @@ public interface ReplyDAO {
   List<Reply> findAll();
 
   // 댓글 수정
-  public int updateByEmail(String email, Reply reply);
+  public int updateByEmail(Long replyId, Reply reply);
+
+  // 댓글 삭제
+  int deleteById(Long userId, Long replyId);
 
   // 총 레코드 건수
   int totalCnt();

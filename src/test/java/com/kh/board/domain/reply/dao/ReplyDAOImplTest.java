@@ -61,4 +61,26 @@ class ReplyDAOImplTest {
 
     log.info("reply={}", reply);
   }
+
+  @Test
+  @Transactional
+  void deleteById() {
+    Long uid = 3L;
+    Long rid = 1L;
+    int deleteById = replyDAO.deleteById(uid, rid);
+
+    log.info("deleteById={}", deleteById);
+  }
+
+  @Test
+  @Transactional
+  void testUpdateByEmail() {
+    Long replyId = 23L;
+
+    Reply reply = new Reply();
+    reply.setCommentary("test");
+    reply.setUsermail("user1@kh.com");
+
+    log.info("reply={}", reply.getCommentary());
+  }
 }

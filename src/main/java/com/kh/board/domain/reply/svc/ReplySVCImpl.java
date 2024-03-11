@@ -26,8 +26,13 @@ public class ReplySVCImpl implements ReplySVC{
   }
 
   @Override
-  public int updateByEmail(String email, Reply reply) {
-    return replyDAO.updateByEmail(email, reply);
+  public int updateByEmail(Long replyId, Reply reply) {
+    return replyDAO.updateByEmail(replyId, reply);
+  }
+
+  @Override
+  public int deleteById(Long userId, Long replyId) {
+    return replyDAO.deleteById(userId, replyId);
   }
 
   @Override

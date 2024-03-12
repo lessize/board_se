@@ -8,7 +8,6 @@
   <link rel="stylesheet" href="/css/board/all.css">
   <link rel="stylesheet" href="/css/board/posting.css">
 </head>
-
 <body class="posting">
   <h3>게시글 조회</h3>
   <form action="#" method="post" id="frm" class="detail">
@@ -194,7 +193,13 @@
             </div>
           `;
 
-          replyList.appendChild(replyElement);
+          replyElement.setAttribute('data-userId', reply.userId);
+
+          // 해당 게시글의 댓글만 보이기
+          const datauid = replyElement.getAttribute('data-userId');
+          if (uid === datauid) {
+            replyList.appendChild(replyElement);
+          }
 
           const editBtn = replyElement.querySelector('.editBtn'); // '수정' 버튼
           const delEditBtn = replyElement.querySelector('.delEditBtn'); // '삭제' 버튼
@@ -213,7 +218,8 @@
             const rid = evt.target.closest('div').querySelector('#rpNum').textContent;
             console.log(rid);
 
-            // document.querySelector('#replyList div .cancelEditBtn').click();
+            evt.target.style.display = 'none';
+            evt.target.closest('div').querySelector('.delEditBtn').style.display = 'none';
 
             const readRp = evt.target.closest('div').querySelector('p');
             const modiRp = editTemplate.content.cloneNode(true).querySelector('div');
@@ -222,6 +228,7 @@
             modiRp.querySelector('textarea').dataset.oldText = readRp.textContent;
             readRp.replaceWith(modiRp);
 
+            // 수정 내역 저장
             saveEditBtn.addEventListener('click', e => {
                 const comment = modiRp.querySelector('textarea').value;
                 console.log(comment);
@@ -246,6 +253,15 @@
                 .then(data => {
                     console.log(data);
                     readRp.textContent = comment;
+                    const editContainer = evt.target.closest('div');
+                    if (editContainer) {
+                      editContainer.style.display = 'none';
+                    }
+                    editContainer.insertAdjacentHTML('beforebegin', readRp.outerHTML);
+                    editContainer.insertAdjacentHTML('beforebegin', `
+                      <button id="editBtn">수정</button>
+                      <button id="delEditBtn">삭제</button>
+                    `);
                 })
                 .catch(error => {
                     console.error('에러 발생:', error);

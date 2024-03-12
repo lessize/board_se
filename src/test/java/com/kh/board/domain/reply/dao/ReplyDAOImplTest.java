@@ -75,11 +75,13 @@ class ReplyDAOImplTest {
   @Test
   @Transactional
   void testUpdateByEmail() {
-    Long replyId = 23L;
+    Long userId = 4L;
+    Long replyId = 16L;
 
     Reply reply = new Reply();
     reply.setCommentary("test");
-    reply.setUsermail("user1@kh.com");
+    reply.setUserId(userId);
+    reply.setReplyId(replyId);
 
     log.info("reply={}", reply.getCommentary());
   }

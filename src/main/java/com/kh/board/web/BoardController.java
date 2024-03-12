@@ -72,7 +72,7 @@ public class BoardController {
   }
 
   // 게시글 목록
-  @GetMapping("")
+  @GetMapping
   public String postList(Model model) {
     List<Board> list = boardSVC.findAll();
     model.addAttribute("list", list);

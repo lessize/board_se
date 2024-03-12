@@ -60,13 +60,11 @@ public class ReplyDAOImpl implements ReplyDAO {
     StringBuffer sql = new StringBuffer();
     sql.append("update reply ");
     sql.append("   set commentary = :commentary ");
-    sql.append(" where usermail = :usermail ");
-    sql.append("   and reply_id = :replyId ");
+    sql.append(" where reply_id = :replyId ");
 
     SqlParameterSource param = new MapSqlParameterSource()
             .addValue("commentary", reply.getCommentary())
-            .addValue("usermail", reply.getUsermail())
-            .addValue("reply_id", replyId);
+            .addValue("replyId", replyId);
 
     int updated = template.update(sql.toString(), param);
 

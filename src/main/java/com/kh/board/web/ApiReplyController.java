@@ -60,13 +60,33 @@ public class ApiReplyController {
   }
 
   // 수정
-  @PatchMapping("/{rpNum}")
+  @PatchMapping("/{rid}")
   public ApiResponse<?> update (@PathVariable("uid") Long userId,
-                                @PathVariable("rpNum") Long replyId,
+                                @PathVariable("rid") Long replyId,
                                 @RequestBody ReqUpdate reqUpdate) {
-    String sessionEmail = reqUpdate.getUsermail();
-    log.info(sessionEmail);
-    return null;
+
+    log.info("uid={}", userId);
+    log.info("replyId={}", replyId);
+    log.info("reqUpdate={}", reqUpdate);
+
+    Reply reply = new Reply();
+    BeanUtils.copyProperties(reqUpdate, reply);
+    log.info("reply={}", reply);
+    int updatedCnt = replySVC.updateByEmail(replyId, reply);
+
+    ApiResponse<ResSave> res = null;
+
+    if (updatedCnt == 1) {
+      ResUpdate resUpdate = new ResUpdate();
+      BeanUtils.copyProperties(reply, resUpdate);
+      resUpdate.setReplyId(replyId);
+      resUpdate.setCommentary(reqUpdate.getCommentary());
+      res = ApiResponse.createApiResponse(ResCode.OK.getCode(), ResCode.OK.name(), null);
+    } else {
+      res = ApiResponse.createApiResponse(ResCode.FAIL.getCode(), ResCode.FAIL.name(), null);
+    }
+
+    return res;
   }
 
   // 삭제

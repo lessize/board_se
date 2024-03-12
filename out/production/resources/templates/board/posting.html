@@ -7,7 +7,6 @@
   <title>게시글 조회</title>
   <link rel="stylesheet" href="/css/board/all.css">
   <link rel="stylesheet" href="/css/board/posting.css">
-  <script type="module" src="/js/common.js" async></script>
 </head>
 
 <body class="posting">
@@ -43,7 +42,7 @@
       <button id="saveEditBtn">저장</button>
       <button id="cancelEditBtn">취소</button>
     </div>
-  </template> 
+  </template>
   <dialog id="delModal">
     <p>삭제하시겠습니까?</p>
     <form action="">
@@ -82,6 +81,7 @@
     const $rpSaveBtn = document.getElementById('rpSaveBtn');
     const rpUser = document.querySelector('#rpfrm #rpNickname').innerText;
     const rpEmail = document.querySelector('#rpfrm #rpEmail').innerText;
+    const editContainer = document.getElementById('editContainer');
 
     console.log(rpEmail);
 
@@ -175,7 +175,6 @@
       })
       .then(data => {
         console.log(data);
-
         const replyList = document.getElementById('replyList');
         const userId = document.getElementById('userId').value;
         const currentEmail = document.querySelector('#rpEmail').innerText;
@@ -190,117 +189,104 @@
               <span>${reply.writer}</span>
               <span>${reply.usermail}</span>
               <p>${reply.commentary}</p>
-            </div>
-            <div>
               <button class="editBtn">수정</button>
               <button class="delEditBtn">삭제</button>
             </div>
           `;
-    
+
           replyList.appendChild(replyElement);
 
           const editBtn = replyElement.querySelector('.editBtn'); // '수정' 버튼
           const delEditBtn = replyElement.querySelector('.delEditBtn'); // '삭제' 버튼
 
+          editBtn.style.display = 'none';
+          delEditBtn.style.display = 'none';
+
+          if (rpEmail == `${reply.usermail}`) {
+            editBtn.style.display = 'block';
+            delEditBtn.style.display = 'block';
+          }
+
+          // 댓글 수정
           editBtn.addEventListener('click', evt => {
-            const currentEditContainer = document.querySelector('#editContainer');
-            if (currentEditContainer) {
-              // 이미 열린 수정창이 있다면 제거
-              currentEditContainer.parentElement.removeChild(currentEditContainer);
-              if (!evt.target.parentElement.parentElement.querySelector('p')) {
-                p.style.display = block;
-              }
-            }
+            console.log('edit');
+            const rid = evt.target.closest('div').querySelector('#rpNum').textContent;
+            console.log(rid);
 
-            const originalComment = reply.commentary;
-            const template = document.getElementById('editTemplate');
-            const clone = document.importNode(template.content, true);
+            // document.querySelector('#replyList div .cancelEditBtn').click();
 
-            clone.getElementById('saveEditBtn').addEventListener('click', function() {
+            const readRp = evt.target.closest('div').querySelector('p');
+            const modiRp = editTemplate.content.cloneNode(true).querySelector('div');
+            
+            modiRp.querySelector('textarea').value = readRp.textContent;
+            modiRp.querySelector('textarea').dataset.oldText = readRp.textContent;
+            readRp.replaceWith(modiRp);
 
-              updateComment();
+            saveEditBtn.addEventListener('click', e => {
+                const comment = modiRp.querySelector('textarea').value;
+                console.log(comment);
+
+                fetch(`/api/boards/${uid}/reply/${rid}`, {
+                    method: 'PATCH',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        userId: uid,
+                        replyId: rid,
+                        commentary: comment
+                    })
+                })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('서버에서 응답을 가져오지 못했습니다.');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    console.log(data);
+                    readRp.textContent = comment;
+                })
+                .catch(error => {
+                    console.error('에러 발생:', error);
+                });
             });
-            clone.getElementById('cancelEditBtn').addEventListener('click', function() {
-              // 취소 로직
-              replyElement.removeChild(clone);
-            });
-
-            const pTag = replyElement.querySelector('p');
-            pTag.style.display = 'none';
-            replyElement.appendChild(clone);
-            const editContent = document.getElementById('editContent');
-            console.log(editContent);
-            editContent.value = pTag.innerText;
-
-            editBtn.style.display = 'none';
-            delEditBtn.style.display = 'none';
           });
 
-          delEditBtn.addEventListener('click', function() {
+          // 댓글 삭제
+          delEditBtn.addEventListener('click', evt => {
             // 삭제 버튼 클릭 시 동작
+            console.log('delete');
+            const rid = evt.target.closest('div').querySelector('#rpNum').textContent;
+            console.log(rid);
+
+            fetch(`/api/boards/${uid}/reply/${rid}`, {
+              method: 'DELETE',
+              headers: {
+                accept: 'application/json'
+              }
+            })
+            .then(response => {
+              if (!response.ok) {
+                throw new Error('서버에서 응답을 가져오지 못했습니다.');
+              }
+              return response.json(); // JSON 형식으로 응답을 파싱
+            })
+            .then(data => {
+              const replyElement = evt.target.closest('div');
+              replyElement.remove(); // 해당 댓글을 화면에서 제거합니다.
+              console.log('댓글이 성공적으로 삭제되었습니다.');
+            })
+            .catch(error => {
+              console.error('에러 발생:', error);
+            });
           });
-        });
+        })
       })
       .catch(error => {
         console.error('에러 발생:', error);
       });
     }
-
-
-    function updateComment() {
-      const $rpNum = document.getElementById('rpNum').textContent;
-      console.log($rpNum);
-      const url = `/api/boards/${uid}/reply/${$rpNum}`;
-
-      // 댓글 내용 가져오기
-      const commentContent = document.getElementById('editContent').value;
-      console.log(commentContent);
-
-      fetch(url, {
-        method: 'PATCH',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          replyId: $rpNum,
-          commentary: commentContent
-        }),
-      })
-      .then(res => {
-        if (!res.ok) {
-          throw new Error('댓글 수정에 실패했습니다.');
-        }
-        return res.json(); // 응답을 JSON으로 변환
-      })
-      .then(data => {
-        console.log('댓글이 성공적으로 수정되었습니다:', data);
-        // 수정된 내용 화면에 반영
-        const pTag = document.querySelector('#replyList div div p');
-        console.log(commentContent);
-        pTag.innerText = commentContent;
-        replyElement.removeChild(editContainer);
-        editBtn.style.display = 'inline-block';
-        delEditBtn.style.display = 'inline-block';
-        pTag.style.display = 'block';
-      })
-      .catch(error => {
-        console.error('댓글 수정 중 에러가 발생했습니다:', error);
-      });
-    }
-
-    // 삭제
-    const $delEditBtn = document.querySelector('.delEditBtn');
-    // $delEditBtn.addEventListener('click', evt => {
-    //   const rid = evt.target.parentElement.parentElement.querySelector('span').innerText;
-    //   console.log(rid); 
-
-      // fetch(`/api/boards/${uid}/reply/${rid}`, {
-      //   method: 'DELETE',
-      //   headers: {
-      //     accept: 'application/json'
-      //   }
-      // })
-    // });
   </script>
 </body>
 </html>
